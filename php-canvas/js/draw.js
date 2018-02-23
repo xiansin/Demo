@@ -50,6 +50,12 @@ DrawPhp.prototype = {
             }
         }
     },
+    /**
+     * 绘制图片
+     *
+     * @param url
+     * @param num
+     */
     drawImage: function (url,num) {
         var img = new Image();
         var xPoint = this.pointArr[num].x;
@@ -70,7 +76,7 @@ DrawPhp.prototype = {
      * @param max
      * @returns {*}
      */
-    random: function random(min, max) {
+    random: function (min, max) {
         return Math.random() * (max - min) + min;
     }
 };
