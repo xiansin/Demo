@@ -158,10 +158,12 @@ class BaiDuTieBaUserAvatarResources
 
 $page_num = isset($_POST["page"]) && !empty($_POST["page"]) ? $_POST["page"] : 1;
 $run = new BaiDuTieBaUserAvatarResources($page_num);
-//$run->getAvatarList($page_num);
-for ($i=1; $i < 459; $i++){
+// 作为API 调用
+$run->getAvatarList($page_num);
+// 作为采集头像 php index.php 采集的头像默认保存到avatar
+/*for ($i=1; $i < 459; $i++){
     $run->uploadAvatar($i);
-}
+}*/
 
 
 
