@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHP</title>
+</head>
+<style type="text/css">
+    * {
+        padding: 0;
+        margin: 0
+    }
+    body{
+        background: #366366ee;
+        cursor: pointer;
+    }
+    canvas {
+        display: block;
+    }
+
+    .canvas {
+        margin: 100px auto;
+        z-index: 0;
+        position: relative;
+
+    }
+    .bubble {
+        position: absolute;
+        z-index: 12;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        filter: alpha(opacity=0);
+    }
+</style>
+<body>
+<div id="img"></div>
+<canvas class="canvas" id="canvas"></canvas>
+<canvas class="bubble" id="bubble"></canvas>
+<script type="text/javascript" src="./js/jquery.min.js"></script>
+<script type="text/javascript" src="./js/data.min.js"></script>
+<script type="text/javascript" src="./js/draw.js"></script>
+<script type="text/javascript" src="./js/bubble.js"></script>
+<script type="text/javascript">
+    // 绘制底色
+    var drawPhp = new DrawPhp();
+    drawPhp.init();
+
+    // 加载泡泡
+    var bubble = new Bubble("#bubble");
+    bubble.create(300);
+    bubble.start();
+
+    var num = 0;
+    var maxNum = 0;
+    var page = 1;
+
+    /**
+     *
+     */
+    function getAvatarData(page) {
+        $.post("index.php",{page: page},function (data) {
+            data = JSON.parse(data);
+            if(data.page !== undefined){
+                page = 1;
+                setTimeout(function () {
+                    getAvatarData(page);
+                },100);
+            }else if(data.length > 0){
+                draw(data,0);
+            }else{
+                page++;
+                setTimeout(function () {
+                    getAvatarData(page);
+                },100);
+            }
+
+        });
+    }
+    getAvatarData(page);
+
+
+    function draw(data,index) {
+        var time = 50;
+        if(maxNum === 49) {
+            time = Math.floor(random(200,400));
+            num = Math.floor(random(0,49));
+        }else{
+            maxNum++;
+        }
+        console.log(index,num);
+        drawPhp.drawImage(data[index++], num++);
+
+        setTimeout(function () {
+            if(index < data.length){
+                draw(data,index);
+            }else{
+                getAvatarData(++page)
+            }
+        }.bind(data,index),time);
+    }
+
+    /**
+     *
+     * @param min
+     * @param max
+     * @returns {*}
+     */
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+
+</script>
+</body>
+</html>
